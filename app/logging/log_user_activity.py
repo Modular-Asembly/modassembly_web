@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import Dict, Optional
 
 from google.cloud import firestore
 from sqlalchemy.orm import Session
@@ -9,7 +9,7 @@ from app.models.User import User
 from app.modassembly.database.sql.get_sql_session import get_sql_session
 
 
-def log_user_activity(user_id: int, session: Session, endpoint: str) -> None:
+def log_user_activity(user_id: int, session: Session, endpoint: str, extra_data: Dict[str, str]) -> None:
     # Retrieve the Firestore client
     client: firestore.Client = get_firestore_client()
 
@@ -18,11 +18,12 @@ def log_user_activity(user_id: int, session: Session, endpoint: str) -> None:
     if user is None:
         raise ValueError(f"User with id {user_id} not found")
 
-    # Log the user_id and a string
+    # Log the user_id, endpoint, and extra data
     activity_log = {
         "user_id": user.id.__int__(),
         "email": user.email.__str__(),
         "endpoint": endpoint,
-        "timestamp": datetime.utcnow()
+        "timestamp": datetime.utcnow().isoformat(),
+        **extra_data
     }
     client.collection("user_activity_logs").add(activity_log)
