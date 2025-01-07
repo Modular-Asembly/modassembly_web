@@ -1,12 +1,11 @@
 from typing import List
-
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 
-from app.models.User import User
-from app.modassembly.database.sql.get_sql_session import get_sql_session
 from app.modassembly.authentication.authenticate import authenticate
+from app.modassembly.database.sql.get_sql_session import get_sql_session
+from app.models.User import User
 
 router = APIRouter()
 
@@ -19,14 +18,15 @@ class UserResponse(BaseModel):
         orm_mode = True
 
 @router.get("/users", response_model=List[UserResponse], summary="Retrieve all users", tags=["users"])
-def get_users(session: Session = Depends(get_sql_session), current_user: User = Depends(authenticate)) -> List[UserResponse]:
+def get_users(
+    session: Session = Depends(get_sql_session),
+    current_user: User = Depends(authenticate)
+) -> List[UserResponse]:
     """
-    Retrieve all users from the database.
+    Retrieve all users.
 
-    This endpoint returns a list of all users. It requires authentication.
-
-    - **session**: SQLAlchemy session dependency.
-    - **current_user**: Authenticated user dependency.
+    This endpoint retrieves all users from the database.
+    It requires authentication and returns a list of users.
     """
     users = session.query(User).all()
     return [
