@@ -13,7 +13,6 @@ from app.models.User import User
 def log_user_activity(
     user: Annotated[User, Depends(authenticate)],
     endpoint: str,
-    session: Session = Depends(get_firestore_client)
 ) -> None:
     client: firestore.Client = get_firestore_client()
     activity_log = {
