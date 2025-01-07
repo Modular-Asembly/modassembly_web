@@ -30,6 +30,8 @@ from app.users.get_users import router
 app.include_router(router)
 from app.users.create_user import router
 app.include_router(router)
+from app.logging.get_user_activity_logs import router
+app.include_router(router)
 
 # Database
 
