@@ -1,0 +1,9 @@
+__pycache__
+.vscode
+venv
+.env
+config.json
+conversation.json
+
+Dockerfile
+deploy.sh
