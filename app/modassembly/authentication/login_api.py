@@ -1,5 +1,5 @@
 from datetime import timedelta
-from typing import Annotated
+from typing import Annotated, Any, Dict
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
@@ -22,6 +22,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 class Token(BaseModel):
     access_token: str
     token_type: str
+    user: Dict[str, Any]
 
 
 @router.post("/login")
@@ -37,4 +38,11 @@ def login_api(
     access_token = create_access_token(
         email=str(user.email), expires_delta=access_token_expires
     )
-    return Token(access_token=access_token, token_type="bearer")
+    user_dict = {
+        column.name: getattr(user, column.name) for column in user.__table__.columns
+    }
+    return Token(
+        access_token=access_token,
+        token_type="bearer",
+        user=user_dict,
+    )
