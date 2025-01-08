@@ -16,7 +16,7 @@ from app.modassembly.database.sql.get_sql_session import get_sql_session
 router = APIRouter()
 
 
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = 2880
 
 
 class Token(BaseModel):
